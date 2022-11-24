@@ -1,38 +1,34 @@
-package michalmlynarczyk.studentteachercrud.teacher;
+package michalmlynarczyk.studentteachercrud.entity;
 
-import lombok.*;
-import michalmlynarczyk.studentteachercrud.student.Student;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.util.HashSet;
 import java.util.Set;
 
 
 @Entity(name = "teacher")
-@Data
-@EqualsAndHashCode(exclude = "students")
-@ToString(exclude = "students")
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Teacher {
-    @SequenceGenerator(
-            name = "teacher_sequence",
-            sequenceName = "teacher_sequence",
-            allocationSize = 1
-    )
-    @Id
-    @GeneratedValue(generator = "teacher_sequence")
-    private Long id;
-    private String firstName;
-    private String lastName;
-    /* sticking to the task requirements there is field age, in more complex applications it will be better to
-       store date of birth and then calculate the age */
-    private Integer age;
-    @Column(unique = true)
-    private String email;
+@SequenceGenerator(
+        name = "default_generator",
+        sequenceName = "teacher_sequence",
+        allocationSize = 1
+)
+public class Teacher extends BasePerson {
+    @NotBlank(message = "Subject cannot be blank")
+    @Size(min = 3, message = "Subject must be longer than 2 characters")
     private String subject;
-
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name = "student_teacher",
@@ -45,6 +41,7 @@ public class Teacher {
                     referencedColumnName = "id"
             )
     )
+    @JsonIgnore
     private Set<Student> students;
 
     public void addStudent(Student student) {
