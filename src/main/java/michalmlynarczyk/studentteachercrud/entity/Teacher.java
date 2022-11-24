@@ -49,6 +49,9 @@ public class Teacher extends BasePerson {
             students = new HashSet<>();
         }
         students.add(student);
+        if (student.getTeachers() == null){
+            student.setTeachers(new HashSet<>());
+        }
         student.getTeachers().add(this);
     }
 
