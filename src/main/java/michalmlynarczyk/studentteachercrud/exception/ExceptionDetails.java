@@ -4,13 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Date;
+import java.io.Serializable;
 
 @AllArgsConstructor
 @Getter
 @Setter
-public class ExceptionDetails {
-    private Date timestamp;
+public class ExceptionDetails implements Serializable {
+    private String timestamp;
     private String message;
     private String details;
 }
