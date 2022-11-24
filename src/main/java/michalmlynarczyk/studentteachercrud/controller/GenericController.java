@@ -4,6 +4,7 @@ import com.github.fge.jsonpatch.JsonPatch;
 import lombok.RequiredArgsConstructor;
 import michalmlynarczyk.studentteachercrud.entity.BasePerson;
 import michalmlynarczyk.studentteachercrud.service.GenericService;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -23,8 +24,12 @@ public abstract class GenericController<T extends BasePerson> {
     }
 
     @GetMapping
-    ResponseEntity<Object> getAll() {
-        return ResponseEntity.ok().body(service.getAll());
+    ResponseEntity<Object> getAll(
+            @RequestParam(value = "size", defaultValue = "10") Integer size,
+            @RequestParam(value = "page", defaultValue = "0") Integer page,
+            @RequestParam(value = "sort", defaultValue = "id") String sortBy) {
+        Page<T> response = service.getAll(page, size, sortBy);
+        return ResponseEntity.ok().body(response);
     }
 
     @GetMapping(params = {"first-name", "last-name"})

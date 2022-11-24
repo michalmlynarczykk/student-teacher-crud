@@ -10,6 +10,10 @@ import michalmlynarczyk.studentteachercrud.entity.BasePerson;
 import michalmlynarczyk.studentteachercrud.exception.EntityAlreadyExistsException;
 import michalmlynarczyk.studentteachercrud.exception.EntityNotUpdatableException;
 import michalmlynarczyk.studentteachercrud.repository.GenericRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
@@ -32,13 +36,20 @@ public abstract class GenericService<T extends BasePerson> {
         return person;
     }
 
-    public List<T> getAll() {
-        //TODO pagination and sorting
-        log.info("Fetching all students");
-        List<T> persons = repository.findAll();
-        if (persons.isEmpty()) {
-            log.error("No persons in database");
-            throw new EntityNotFoundException("No persons available in database, please first add some persons");
+    public Page<T> getAll(Integer page, Integer size, String sortBy) {
+        log.info("Fetching all persons");
+        Page<T> persons;
+        try {
+            Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
+            persons = repository.findAll(pageable);
+        } catch (Exception e) {
+            log.error("Pageable arguments not valid");
+            throw new IllegalArgumentException(e);
+        }
+
+        if (!persons.hasContent()) {
+            log.error("No persons available for this request");
+            throw new EntityNotFoundException("No persons available for this request");
         }
         return persons;
     }
