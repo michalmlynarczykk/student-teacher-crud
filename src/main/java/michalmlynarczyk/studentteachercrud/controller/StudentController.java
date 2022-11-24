@@ -43,6 +43,8 @@ public class StudentController extends GenericController<Student> {
             throw new EntityNotFoundException(String.format("Operation parameter: %s not recognized", op));
         }
         return ResponseEntity
-                .ok(String.format("Teacher list for student with id: %d updated successfully", studentId));
+                .ok(String.format("Teacher list for student with id: %d updated successfully,operation: %s",
+                        studentId,
+                        op));
     }
 }

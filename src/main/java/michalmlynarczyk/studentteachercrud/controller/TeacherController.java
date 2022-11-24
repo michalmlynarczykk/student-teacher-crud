@@ -27,7 +27,7 @@ public class TeacherController extends GenericController<Teacher> {
         return ResponseEntity.ok(response);
     }
 
-    @PatchMapping(path = "/{id}/student", params = {"teacher-id", "op"})
+    @PatchMapping(path = "/{id}/student", params = {"student-id", "op"})
     public ResponseEntity<Object> updateStudentList(
             @PathVariable("id") Long teacherId,
             @RequestParam("student-id") Long studentId,
@@ -40,7 +40,9 @@ public class TeacherController extends GenericController<Teacher> {
             throw new EntityNotFoundException(String.format("Operation parameter: %s not recognized", op));
         }
         return ResponseEntity
-                .ok(String.format("Student list for teacher with id: %d updated successfully", teacherId));
+                .ok(String.format("Student list for teacher with id: %d updated successfully,operation: %s",
+                        teacherId,
+                        op));
     }
 
 }
