@@ -65,4 +65,14 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
                 .body(details);
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    protected ResponseEntity<Object> handleIllegalArgumentException(IllegalArgumentException ex) {
+        ExceptionDetails details = new ExceptionDetails(
+                LocalDateTime.now(Clock.systemDefaultZone()).toString(),
+                ex.getCause().getMessage(),
+                ex.getClass().getSimpleName());
+        return ResponseEntity
+                .unprocessableEntity()
+                .body(details);
+    }
 }
